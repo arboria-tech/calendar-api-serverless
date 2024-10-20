@@ -109,13 +109,13 @@ The `create_calendar_event` function allows you to create an event in the user's
 - `summary` (str): The event title.
 - `description` (str): The event description.
 
-#### **2. Fetch Calendar Events**
+#### **2. Get Calendar Events**
 
-The `fetch_calendar_events` function fetches upcoming events from the user's Google Calendar.
+The `get_calendar_events` function fetches upcoming events from the user's Google Calendar.
 
 ##### Parameters:
 
-- `user_id` (str): The user's ID used to fetch Google Calendar credentials from S3.
-- `calendar_id` (str): The ID of the Google Calendar to fetch events from.
-- `time_min` (str): ISO 8601 timestamp to start fetching events from (optional, defaults to the current time).
-- `max_results` (int): The maximum number of events to fetch (optional, defaults to 10).
+- **user_id** (str): The user's ID used to fetch Google Calendar credentials from S3.
+- **calendar_id** (str): The ID of the Google Calendar to fetch events from.
+- **start_time** (str): ISO 8601 timestamp specifying the start of the time range to fetch events from (required).
+- **end_time** (str): ISO 8601 timestamp specifying the end of the time range to fetch events from (required).
