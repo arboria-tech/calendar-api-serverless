@@ -1,0 +1,14 @@
+venv/
+.env
+__pycache__/
+
+cronogramas/
+
+*.tfvars
+*.tfstate
+*.tfstate.backup
+*.tfstate.backup.*
+*.tfstate.lock.info
+.terraform/
+
+*.zip
