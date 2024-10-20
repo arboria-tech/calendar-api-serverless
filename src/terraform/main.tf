@@ -108,6 +108,21 @@ module "lambda_redirect_google_credentials" {
   api_gw_execution_arn = aws_apigatewayv2_api.http_api.execution_arn
 }
 
+# Lambda de get calendar events
+module "lambda_get_calendar_events" {
+  source        = "./modules/lambda"
+  function_name = "get_calendar_events"
+  role_arn      = aws_iam_role.lambda_role.arn
+  zip_file      = "./deployments/get_calendar_events.zip"
+  layers = [
+    aws_lambda_layer_version.google_calendar_layer.arn
+  ]
+  environment_variables = {
+    S3_BUCKET_NAME = module.s3_bucket.bucket_name
+  }
+  api_gw_execution_arn = aws_apigatewayv2_api.http_api.execution_arn
+}
+
 # ----------------------------------------
 # API Gateway
 # ----------------------------------------
@@ -140,4 +155,12 @@ module "api_gateway_redirect_google_credentials" {
   method            = "POST"
   path              = "/redirect_google_credentials"
   lambda_invoke_arn = module.lambda_redirect_google_credentials.lambda_invoke_arn
+}
+
+module "api_gateway_get_calendar_events" {
+  source            = "./modules/api_gateway"
+  api_id            = aws_apigatewayv2_api.http_api.id
+  method            = "POST"
+  path              = "/get_calendar_events"
+  lambda_invoke_arn = module.lambda_get_calendar_events.lambda_invoke_arn
 }
