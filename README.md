@@ -1,6 +1,7 @@
 # Google Calendar Integration Solution via AWS Lambda
 
 This solution enables integration between an application and **Google Calendar** using the **OAuth 2.0** service for authentication. Through **AWS Lambda** functions and **API Gateway**, users can authenticate with Google, grant access permissions to their Google Calendar, and store access tokens in your **Amazon S3**. This allows for the use of Google Calendar services, such as creating, reading, and managing events from the user's calendar.
+The solution also **creates and lists** events on the user's Google Calendar.
 
 ## Features
 
@@ -26,6 +27,13 @@ This solution enables integration between an application and **Google Calendar**
 
 4. **Success Page:**
    - The Lambda returns an HTML page that informs the user of the successful connection, after that, you are all ready to use the Google Calendar API with the user stored tokens.
+
+5. **Access Google Calendar:**
+   - With the access tokens, the application can now make requests to the Google Calendar API on behalf of the user.
+   - The tokens are retrieved from S3 and used to authenticate the requests.
+
+6. **Event Management:**
+   - The application can now create, read, update, and delete events on the user's Google Calendar.
 
 ## AWS Implementation with Terraform
 
@@ -82,3 +90,31 @@ During the creation of the OAuth client, specify the necessary scopes for access
 ### 4. Allow Test Users or Publish the App
 - While the application is in development, add email addresses of **permitted users** for testing.
 - If you want to make the app available to everyone, follow the **publication** process of the app on Google, ensuring it meets the requirements to pass OAuth verification.
+
+
+### 5. Google Calendar Integration Functions
+
+#### **1. Create Calendar Event**
+
+The `create_calendar_event` function allows you to create an event in the user's Google Calendar.
+
+##### Parameters:
+
+- `user_id` (str): The user's ID used to fetch Google Calendar credentials from S3.
+- `calendar_id` (str): The ID of the Google Calendar where the event will be created.
+- `start_time` (str): The event start time in ISO format (e.g., `"2024-01-01T10:00:00"`).
+- `end_time` (str): The event end time in ISO format (optional, defaults to 1 hour after the start time).
+- `attendees` (list): A list of attendee emails.
+- `summary` (str): The event title.
+- `description` (str): The event description.
+
+#### **2. Fetch Calendar Events**
+
+The `fetch_calendar_events` function fetches upcoming events from the user's Google Calendar.
+
+##### Parameters:
+
+- `user_id` (str): The user's ID used to fetch Google Calendar credentials from S3.
+- `calendar_id` (str): The ID of the Google Calendar to fetch events from.
+- `time_min` (str): ISO 8601 timestamp to start fetching events from (optional, defaults to the current time).
+- `max_results` (int): The maximum number of events to fetch (optional, defaults to 10).
