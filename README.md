@@ -93,13 +93,13 @@ During the creation of the OAuth client, specify the necessary scopes for access
 - If you want to make the app available to everyone, follow the **publication** process of the app on Google, ensuring it meets the requirements to pass OAuth verification.
 
 
-### 5. Google Calendar Integration Functions
+## Google Calendar Integration Functions
 
-#### **1. Create Calendar Event**
+### **1. Create Calendar Event**
 
 The `create_calendar_event` function allows you to create an event in the user's Google Calendar.
 
-##### Parameters:
+#### Parameters:
 
 - `user_id` (str): The user's ID used to fetch Google Calendar credentials from S3.
 - `calendar_id` (str): The ID of the Google Calendar where the event will be created.
@@ -109,11 +109,11 @@ The `create_calendar_event` function allows you to create an event in the user's
 - `summary` (str): The event title.
 - `description` (str): The event description.
 
-#### **2. Get Calendar Events**
+### **2. Get Calendar Events**
 
 The `get_calendar_events` function fetches upcoming events from the user's Google Calendar.
 
-##### Parameters:
+#### Parameters:
 
 - **user_id** (str): The user's ID used to fetch Google Calendar credentials from S3.
 - **calendar_id** (str): The ID of the Google Calendar to fetch events from.
