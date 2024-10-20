@@ -123,6 +123,21 @@ module "lambda_get_calendar_events" {
   api_gw_execution_arn = aws_apigatewayv2_api.http_api.execution_arn
 }
 
+# Lambda de create calendar event
+module "lambda_create_calendar_event" {
+  source        = "./modules/lambda"
+  function_name = "create_calendar_event"
+  role_arn      = aws_iam_role.lambda_role.arn
+  zip_file      = "./deployments/create_calendar_event.zip"
+  layers = [
+    aws_lambda_layer_version.google_calendar_layer.arn
+  ]
+  environment_variables = {
+    S3_BUCKET_NAME = module.s3_bucket.bucket_name
+  }
+  api_gw_execution_arn = aws_apigatewayv2_api.http_api.execution_arn
+}
+
 # ----------------------------------------
 # API Gateway
 # ----------------------------------------
@@ -163,4 +178,12 @@ module "api_gateway_get_calendar_events" {
   method            = "POST"
   path              = "/get_calendar_events"
   lambda_invoke_arn = module.lambda_get_calendar_events.lambda_invoke_arn
+}
+
+module "api_gateway_create_calendar_event" {
+  source            = "./modules/api_gateway"
+  api_id            = aws_apigatewayv2_api.http_api.id
+  method            = "POST"
+  path              = "/create_calendar_event"
+  lambda_invoke_arn = module.lambda_create_calendar_event.lambda_invoke_arn
 }
