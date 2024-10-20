@@ -10,6 +10,7 @@ The solution also **creates and lists** events on the user's Google Calendar.
 - **Scope Support:** Allows access to different scopes of the Google Calendar API, including reading and creating events.
 - **Redirection and Callback:** Manages the authentication flow and token exchange through appropriate redirections.
 - **Success Interface:** Returns a simple interface to the user to indicate successful authentication.
+- **Event Management:** Provides functions to create and list events on the user's Google Calendar.
 
 ## How the Solution Works
 
