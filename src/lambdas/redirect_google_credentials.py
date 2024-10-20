@@ -1,39 +1,100 @@
-from google_auth_oauthlib.flow import Flow
 import os
 import json
+import logging
+from google_auth_oauthlib.flow import Flow
+from typing import Any, Dict, Union
 
-def get_authorization_url(user_id):
-    # Usa a URI de redirecionamento a partir da variável de ambiente
+# Configura o logger
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# Função para gerar a URL de autorização
+def get_authorization_url(user_id: str) -> str:
+    """
+    Gera a URL de autorização para o Google OAuth2 usando o ID do usuário.
+    
+    Args:
+        user_id (str): O ID do usuário que será incluído no parâmetro 'state'.
+
+    Returns:
+        str: A URL de autorização para o fluxo OAuth2.
+    """
     redirect_uri = os.environ.get('REDIRECT_URI', 'https://default-uri.com/callback')
     
-    # Cria o flow de autenticação
-    flow = Flow.from_client_secrets_file(
-        'client_secret.json',  # Certifique-se de ter esse arquivo com as credenciais da API do Google
-        scopes=['https://www.googleapis.com/auth/calendar']
-    )
-    flow.redirect_uri = redirect_uri
+    try:
+        flow = Flow.from_client_secrets_file(
+            'client_secret.json',
+            scopes=['https://www.googleapis.com/auth/calendar']
+        )
+        flow.redirect_uri = redirect_uri
 
-    # Gerar a URL de autorização com o user_id no state
-    authorization_url, _ = flow.authorization_url(
-        access_type='offline',
-        state=user_id,
-        include_granted_scopes='true'
-    )
+        authorization_url, _ = flow.authorization_url(
+            access_type='offline',
+            state=user_id,
+            include_granted_scopes='true'
+        )
+        
+        logger.info(f"Authorization URL generated successfully for user_id={user_id}")
+        return authorization_url
+    except Exception as e:
+        logger.error(f"Error generating authorization URL for user_id={user_id}: {str(e)}")
+        raise e
 
-    return authorization_url
+# Função principal do Lambda
+def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Union[int, Dict[str, str]]]:
+    """
+    Handler principal da função Lambda que processa a requisição e gera a URL de autorização do Google OAuth2.
 
-def lambda_handler(event, context):
-    # Extrai o body da requisição (formato JSON)
-    body = json.loads(event['body'])
-    user_id = body['user_id']  # O user_id é extraído do corpo da requisição
+    Args:
+        event (Dict[str, Any]): O evento da Lambda, contendo o corpo da requisição.
+        context (Any): O contexto da Lambda.
 
-    # Gera a URL de autorização com o user_id no state
-    authorization_url = get_authorization_url(user_id)
+    Returns:
+        Dict[str, Union[int, Dict[str, str]]]: Resposta HTTP com código de status e cabeçalhos.
+    """
+    try:
+        # Extração do body e validação
+        body = json.loads(event.get('body', '{}'))
+        user_id = body.get('user_id')
 
-    # Retorna a URL de autorização (302 para redirecionamento)
-    return {
-        'statusCode': 302,
-        'headers': {
-            'Location': authorization_url
+        if not user_id:
+            logger.warning("user_id not provided in the request body.")
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'user_id is required'}),
+                'headers': {
+                    'Content-Type': 'application/json'
+                }
+            }
+
+        logger.info(f"Processing request for user_id={user_id}")
+
+        # Gera a URL de autorização
+        authorization_url = get_authorization_url(user_id)
+
+        # Retorna a URL de autorização com redirecionamento (302)
+        return {
+            'statusCode': 302,
+            'headers': {
+                'Location': authorization_url
+            }
         }
-    }
+
+    except json.JSONDecodeError:
+        logger.error("Failed to decode JSON from the request body.")
+        return {
+            'statusCode': 400,
+            'body': json.dumps({'error': 'Invalid JSON format'}),
+            'headers': {
+                'Content-Type': 'application/json'
+            }
+        }
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {str(e)}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': 'Internal Server Error'}),
+            'headers': {
+                'Content-Type': 'application/json'
+            }
+        }
