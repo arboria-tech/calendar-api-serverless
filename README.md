@@ -1,6 +1,6 @@
 # Google Calendar Integration Solution via AWS Lambda
 
-This solution enables integration between an application and **Google Calendar** using the **OAuth 2.0** service for authentication. Through **AWS Lambda** functions and **API Gateway**, users can authenticate with Google, grant access permissions to their Google Calendar, and store access tokens in **Amazon S3**. This allows for the use of Google Calendar services, such as creating, reading, and managing events.
+This solution enables integration between an application and **Google Calendar** using the **OAuth 2.0** service for authentication. Through **AWS Lambda** functions and **API Gateway**, users can authenticate with Google, grant access permissions to their Google Calendar, and store access tokens in your **Amazon S3**. This allows for the use of Google Calendar services, such as creating, reading, and managing events from the user's calendar.
 
 ## Features
 
@@ -25,7 +25,7 @@ This solution enables integration between an application and **Google Calendar**
    - The tokens are stored in **Amazon S3**, associated with the user who authorized access.
 
 4. **Success Page:**
-   - The Lambda returns an HTML page that informs the user of the successful connection, allowing them to access Google Calendar directly.
+   - The Lambda returns an HTML page that informs the user of the successful connection, after that, you are all ready to use the Google Calendar API with the user stored tokens.
 
 ## AWS Implementation with Terraform
 
