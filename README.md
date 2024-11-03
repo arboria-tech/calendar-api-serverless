@@ -97,7 +97,7 @@ During the creation of the OAuth client, specify the necessary scopes for access
 
 ### **1. Create Calendar Event**
 
-The `create_calendar_event` function allows you to create an event in the user's Google Calendar.
+The `create-calendar-event` function allows you to create an event in the user's Google Calendar.
 
 #### Parameters:
 
@@ -111,7 +111,7 @@ The `create_calendar_event` function allows you to create an event in the user's
 
 ### **2. Get Calendar Events**
 
-The `get_calendar_events` function fetches upcoming events from the user's Google Calendar.
+The `get-calendar-events` function fetches upcoming events from the user's Google Calendar.
 
 #### Parameters:
 

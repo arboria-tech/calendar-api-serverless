@@ -9,7 +9,7 @@ provider "aws" {
 # Cria o bucket S3
 module "s3_bucket" {
   source      = "./modules/s3"
-  bucket_name = "google-calendar-arboria"
+  bucket_name = "g-calendar-arboria"
 }
 
 # ----------------------------------------
@@ -68,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 # Cria a Lambda Layer
 resource "aws_lambda_layer_version" "google_calendar_layer" {
   filename            = "./deployments/google_calendar_layer.zip"
-  layer_name          = "extract-layer"
+  layer_name          = "google-calendar-layer"
   compatible_runtimes = ["python3.11"]
   source_code_hash    = filebase64sha256("./deployments/google_calendar_layer.zip")
 }
@@ -168,7 +168,7 @@ module "api_gateway_redirect_google_credentials" {
   source            = "./modules/api_gateway"
   api_id            = aws_apigatewayv2_api.http_api.id
   method            = "POST"
-  path              = "/redirect_google_credentials"
+  path              = "/redirect-google-credentials"
   lambda_invoke_arn = module.lambda_redirect_google_credentials.lambda_invoke_arn
 }
 
@@ -176,7 +176,7 @@ module "api_gateway_get_calendar_events" {
   source            = "./modules/api_gateway"
   api_id            = aws_apigatewayv2_api.http_api.id
   method            = "POST"
-  path              = "/get_calendar_events"
+  path              = "/get-calendar-events"
   lambda_invoke_arn = module.lambda_get_calendar_events.lambda_invoke_arn
 }
 
@@ -184,6 +184,6 @@ module "api_gateway_create_calendar_event" {
   source            = "./modules/api_gateway"
   api_id            = aws_apigatewayv2_api.http_api.id
   method            = "POST"
-  path              = "/create_calendar_event"
+  path              = "/create-calendar-event"
   lambda_invoke_arn = module.lambda_create_calendar_event.lambda_invoke_arn
 }

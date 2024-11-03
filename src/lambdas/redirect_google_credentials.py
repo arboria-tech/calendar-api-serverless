@@ -72,11 +72,12 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Union[int, 
         # Gera a URL de autorização
         authorization_url = get_authorization_url(user_id)
 
-        # Retorna a URL de autorização com redirecionamento (302)
+        # Retorna a URL de autorização no corpo da resposta
         return {
-            'statusCode': 302,
+            'statusCode': 200,
+            'body': json.dumps({'authorization_url': authorization_url}),
             'headers': {
-                'Location': authorization_url
+                'Content-Type': 'application/json'
             }
         }
 
