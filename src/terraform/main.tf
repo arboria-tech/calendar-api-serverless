@@ -9,7 +9,7 @@ provider "aws" {
 # Cria o bucket S3
 module "s3_bucket" {
   source      = "./modules/s3"
-  bucket_name = "g-calendar-arboria"
+  bucket_name = "g-calendar-arboria-tech"
 }
 
 # ----------------------------------------
